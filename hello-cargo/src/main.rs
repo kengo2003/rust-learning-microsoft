@@ -85,22 +85,6 @@ fn main() {
         we_load, we_click, we_key
     );
     goodbye("Goodbye");
-
-    // let mut car = car_factory(String::from("Red"), Transmission::Manual, false);
-    // println!(
-    //     "Car 1 = {}, {:?} transmission, convertible: {}, mileage: {}",
-    //     car.color, car.transmission, car.convertible, car.mileage
-    // );
-    // car = car_factory(String::from("Silver"), Transmission::Automatic, true);
-    // println!(
-    //     "Car 2 = {}, {:?} transmission, convertible: {}, mileage: {}",
-    //     car.color, car.transmission, car.convertible, car.mileage
-    // );
-    // car = car_factory(String::from("Yellow"), Transmission::SemiAuto, true);
-    // println!(
-    //     "Car 3 = {}, {:?} transmission, convertible: {}, mileage: {}",
-    //     car.color, car.transmission, car.convertible, car.mileage
-    // );
     vec();
 
     let colors = ["Blue", "Green", "Red", "Silver"];
@@ -108,26 +92,22 @@ fn main() {
     let mut engine = Transmission::Manual;
 
     car = car_factory(String::from(colors[0]), engine, true, 0);
-    println!(
-        "Car order 1: {:?}, Hard top = {}, {:?}, {}, {} miles",
-        car.age.0, car.roof, car.motor, car.color, car.age.1
-    );
-
-    // Car order #2: Used, Semi-automatic, Convertible
+    // println!(
+    //     "Car order 1: {:?}, Hard top = {}, {:?}, {}, {} miles",
+    //     car.age.0, car.roof, car.motor, car.color, car.age.1
+    // );
     engine = Transmission::SemiAuto;
     car = car_factory(String::from(colors[1]), engine, false, 100);
-    println!(
-        "Car order 2: {:?}, Hard top = {}, {:?}, {}, {} miles",
-        car.age.0, car.roof, car.motor, car.color, car.age.1
-    );
-
-    // Car order #3: Used, Automatic, Hard top
+    // println!(
+    //     "Car order 2: {:?}, Hard top = {}, {:?}, {}, {} miles",
+    //     car.age.0, car.roof, car.motor, car.color, car.age.1
+    // );
     engine = Transmission::Automatic;
     car = car_factory(String::from(colors[2]), engine, true, 200);
-    println!(
-        "Car order 3: {:?}, Hard top = {}, {:?}, {}, {} miles",
-        car.age.0, car.roof, car.motor, car.color, car.age.1
-    );
+    // println!(
+    //     "Car order 3: {:?}, Hard top = {}, {:?}, {}, {} miles",
+    //     car.age.0, car.roof, car.motor, car.color, car.age.1
+    // );
 }
 
 fn goodbye(text: &str) {
@@ -135,6 +115,31 @@ fn goodbye(text: &str) {
 }
 
 fn car_factory(color: String, motor: Transmission, roof: bool, miles: u32) -> Car {
+    if car_quality(miles).0 == Age::Used {
+        if roof {
+            println!(
+                "Preparing a used car: {:?}, {}, Hard top, {} miles",
+                motor, color, miles
+            );
+        } else {
+            println!(
+                "Preparing a used car: {:?}, {}, Convertible, {} miles",
+                motor, color, miles
+            );
+        }
+    } else {
+        if roof {
+            println!(
+                "Building a new car: {:?}, {}, Hard top, {} miles",
+                motor, color, miles
+            );
+        } else {
+            println!(
+                "Building a new car: {:?}, {}, Convertible, {} miles",
+                motor, color, miles
+            );
+        }
+    }
     Car {
         color: color,
         motor: motor,
@@ -160,5 +165,9 @@ fn vec() {
 
 fn car_quality(miles: u32) -> (Age, u32) {
     let quality = (Age::New, miles);
-    quality
+    quality;
+    if miles > 0 {
+        return (Age::Used, miles);
+    }
+    (Age::New, miles)
 }
