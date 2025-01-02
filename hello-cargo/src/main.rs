@@ -23,8 +23,8 @@ struct Car {
     convertible: bool,
     mileage: u32,
 }
-# [derive(PartialEq, Debug)]
-enum Transmission{
+#[derive(PartialEq, Debug)]
+enum Transmission {
     Manual,
     SemiAuto,
     Automatic,
@@ -80,24 +80,50 @@ fn main() {
         we_load, we_click, we_key
     );
     goodbye("Goodbye");
-    
+
     let mut car = car_factory(String::from("Red"), Transmission::Manual, false);
-    println!("Car 1 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+    println!(
+        "Car 1 = {}, {:?} transmission, convertible: {}, mileage: {}",
+        car.color, car.transmission, car.convertible, car.mileage
+    );
     car = car_factory(String::from("Silver"), Transmission::Automatic, true);
-    println!("Car 2 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+    println!(
+        "Car 2 = {}, {:?} transmission, convertible: {}, mileage: {}",
+        car.color, car.transmission, car.convertible, car.mileage
+    );
     car = car_factory(String::from("Yellow"), Transmission::SemiAuto, true);
-    println!("Car 3 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+    println!(
+        "Car 3 = {}, {:?} transmission, convertible: {}, mileage: {}",
+        car.color, car.transmission, car.convertible, car.mileage
+    );
+
+    vec();
 }
 
 fn goodbye(text: &str) {
     println!("text: {}", text)
 }
 
-fn car_factory(color: String, transmission: Transmission, convertible: bool) -> Car{
+fn car_factory(color: String, transmission: Transmission, convertible: bool) -> Car {
     Car {
         color: color,
         transmission: transmission,
         convertible: convertible,
-        mileage: 0
+        mileage: 0,
     }
+}
+
+fn vec() {
+    let three_nums = vec![153, 58, 00];
+    println!("Init vector: {:?}", three_nums);
+    let zeroes = vec![0; 5];
+    println!("Zero: {:?}", zeroes);
+
+    let mut fruit = Vec::new();
+    fruit.push("Apple");
+    fruit.push("Banana");
+    fruit.push("Cherry");
+    println!("Fruits: {:?}", fruit);
+    fruit.pop();
+    println!("Fruits: {:?}", fruit)
 }
