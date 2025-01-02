@@ -17,6 +17,18 @@ enum WebEvent {
     WEClick(MouseClick),
     WEKeys(KeyPress),
 }
+struct Car {
+    color: String,
+    transmission: Transmission,
+    convertible: bool,
+    mileage: u32,
+}
+# [derive(PartialEq, Debug)]
+enum Transmission{
+    Manual,
+    SemiAuto,
+    Automatic,
+}
 fn main() {
     println!("Hello, world!");
     println!("First alphabet is {} and Next alphabet is {} ", "A", 'B');
@@ -67,4 +79,25 @@ fn main() {
         "WebEvent enum structure: {:#?}, {:#?}, {:#?}",
         we_load, we_click, we_key
     );
+    goodbye("Goodbye");
+    
+    let mut car = car_factory(String::from("Red"), Transmission::Manual, false);
+    println!("Car 1 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+    car = car_factory(String::from("Silver"), Transmission::Automatic, true);
+    println!("Car 2 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+    car = car_factory(String::from("Yellow"), Transmission::SemiAuto, true);
+    println!("Car 3 = {}, {:?} transmission, convertible: {}, mileage: {}", car.color, car.transmission, car.convertible, car.mileage);
+}
+
+fn goodbye(text: &str) {
+    println!("text: {}", text)
+}
+
+fn car_factory(color: String, transmission: Transmission, convertible: bool) -> Car{
+    Car {
+        color: color,
+        transmission: transmission,
+        convertible: convertible,
+        mileage: 0
+    }
 }
