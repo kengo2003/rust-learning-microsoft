@@ -1,8 +1,19 @@
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{Error, Read};
+use std::path::PathBuf;
 struct Student {
     name: String,
     level: u8,
     is_bool: bool,
 }
+struct Person {
+    first: String,
+    middle: Option<String>,
+    last: String,
+}
+#[derive(Debug)]
+struct DivisionByZeroError;
 struct Grades(char, char, char, char, f32);
 #[derive(Debug)]
 struct KeyPress(String, char);
@@ -88,7 +99,6 @@ fn main() {
     goodbye("Goodbye");
     vec();
 
-    use std::collections::HashMap;
     let mut orders: HashMap<i32, Car> = HashMap::new();
     let mut order = 1;
     let mut car: Car;
@@ -110,6 +120,39 @@ fn main() {
 
     hash_map();
     loop_fn();
+    error_fn();
+
+    let john = Person {
+        first: String::from("James"),
+        middle: Some(String::from("Oliver")),
+        last: String::from("Smith"),
+    };
+    assert_eq!(build_full_name(&john), "James Oliver Smith");
+
+    let alice = Person {
+        first: String::from("Alice"),
+        middle: None,
+        last: String::from("Stevens"),
+    };
+    assert_eq!(build_full_name(&alice), "Alice Stevens");
+
+    let bob = Person {
+        first: String::from("Robert"),
+        middle: Some(String::from("Murdock")),
+        last: String::from("Jones"),
+    };
+    assert_eq!(build_full_name(&bob), "Robert Murdock Jones");
+
+    println!("{:?}", safe_division(9.0, 3.0));
+    println!("{:?}", safe_division(4.0, 0.0));
+    println!("{:?}", safe_division(0.0, 2.0));
+
+    if read_file_contents(PathBuf::from("src/main.rs")).is_ok() {
+        println!("The program found the main file.");
+    }
+    if read_file_contents(PathBuf::from("non-existent-file.txt")).is_err() {
+        println!("The program reported an error for the file that doesn't exist.");
+    }
 }
 
 fn goodbye(text: &str) {
@@ -164,7 +207,6 @@ fn car_quality(miles: u32) -> (Age, u32) {
 }
 
 fn hash_map() {
-    use std::collections::HashMap;
     let mut reviews: HashMap<String, String> = HashMap::new();
 
     reviews.insert(
@@ -209,4 +251,58 @@ fn loop_fn() {
     for number in 0..5 {
         println!("{}", number)
     }
+}
+
+fn error_fn() {
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+    for &index in [0, 1, 2, 99].iter() {
+        match fruits.get(index) {
+            Some(&"coconut") => println!("This is coconut"),
+            Some(name) => println!("Fruits name is '{}'", name),
+            None => println!("This fruits is None"),
+        }
+    }
+
+    let a_number: Option<u8> = Some(7);
+    match a_number {
+        Some(7) => println!("That's my lucky number!"),
+        _ => {}
+    }
+    let a_number: Option<u8> = Some(7);
+    if let Some(7) = a_number {
+        println!("That's my lucky number!");
+    }
+}
+fn build_full_name(person: &Person) -> String {
+    let mut full_name = String::new();
+    full_name.push_str(&person.first);
+    full_name.push_str(" ");
+
+    if let Some(middle) = &person.middle {
+        full_name.push_str(&middle);
+        full_name.push_str(" ")
+    }
+
+    full_name.push_str(&person.last);
+    full_name
+}
+
+fn safe_division(dividend: f64, divisor: f64) -> Result<f64, DivisionByZeroError> {
+    if divisor == 0.0 {
+        Err(DivisionByZeroError)
+    } else {
+        Ok(dividend / divisor)
+    }
+}
+fn read_file_contents(path: PathBuf) -> Result<String, Error> {
+    let mut string = String::new();
+    let mut file: File = match File::open(path) {
+        Ok(file_handle) => file_handle,
+        Err(io_error) => return Err(io_error),
+    };
+    match file.read_to_string(&mut string) {
+        Ok(_) => (),
+        Err(io_error) => return Err(io_error),
+    };
+    Ok(string)
 }
