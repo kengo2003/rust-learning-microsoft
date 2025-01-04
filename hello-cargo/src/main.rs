@@ -3,6 +3,11 @@ struct Student {
     level: u8,
     is_bool: bool,
 }
+struct Person {
+    first: String,
+    middle: Option<String>,
+    last: String,
+}
 struct Grades(char, char, char, char, f32);
 #[derive(Debug)]
 struct KeyPress(String, char);
@@ -110,6 +115,28 @@ fn main() {
 
     hash_map();
     loop_fn();
+    error_fn();
+
+    let john = Person {
+        first: String::from("James"),
+        middle: Some(String::from("Oliver")),
+        last: String::from("Smith"),
+    };
+    assert_eq!(build_full_name(&john), "James Oliver Smith");
+
+    let alice = Person {
+        first: String::from("Alice"),
+        middle: None,
+        last: String::from("Stevens"),
+    };
+    assert_eq!(build_full_name(&alice), "Alice Stevens");
+
+    let bob = Person {
+        first: String::from("Robert"),
+        middle: Some(String::from("Murdock")),
+        last: String::from("Jones"),
+    };
+    assert_eq!(build_full_name(&bob), "Robert Murdock Jones");
 }
 
 fn goodbye(text: &str) {
@@ -209,4 +236,38 @@ fn loop_fn() {
     for number in 0..5 {
         println!("{}", number)
     }
+}
+
+fn error_fn() {
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+    for &index in [0, 1, 2, 99].iter() {
+        match fruits.get(index) {
+            Some(&"coconut") => println!("This is coconut"),
+            Some(name) => println!("Fruits name is '{}'", name),
+            None => println!("This fruits is None"),
+        }
+    }
+
+    let a_number: Option<u8> = Some(7);
+    match a_number {
+        Some(7) => println!("That's my lucky number!"),
+        _ => {}
+    }
+    let a_number: Option<u8> = Some(7);
+    if let Some(7) = a_number {
+        println!("That's my lucky number!");
+    }
+}
+fn build_full_name(person: &Person) -> String {
+    let mut full_name = String::new();
+    full_name.push_str(&person.first);
+    full_name.push_str(" ");
+
+    if let Some(middle) = &person.middle {
+        full_name.push_str(&middle);
+        full_name.push_str(" ")
+    }
+
+    full_name.push_str(&person.last);
+    full_name
 }
