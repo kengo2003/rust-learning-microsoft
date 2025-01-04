@@ -96,28 +96,20 @@ fn main() {
     orders.insert(order, car);
     println!("Car order {}: {:?}", order, orders.get(&order));
 
-    order = order + 1;
-    car = car_factory(order, 2000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-    order = order + 1;
-    car = car_factory(order, 0);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-    order = order + 1;
-    car = car_factory(order, 0);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-    order = order + 1;
-    car = car_factory(order, 3000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-    order = order + 1;
-    car = car_factory(order, 4000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
+    let mut miles = 0;
+    for order in 1..12 {
+        car = car_factory(order, miles);
+        orders.insert(order, car);
+        println!("Car order {}: {:?}", order, orders.get(&order));
+        if miles == 2100 {
+            miles = 0;
+        } else {
+            miles = miles + 700;
+        }
+    }
 
     hash_map();
+    loop_fn();
 }
 
 fn goodbye(text: &str) {
@@ -127,7 +119,7 @@ fn goodbye(text: &str) {
 fn car_factory(order: i32, miles: u32) -> Car {
     let colors = ["Blue", "Green", "Red", "Silver"];
     let mut color = order as usize;
-    if color > 4 {
+    while color > 4 {
         color = color - 4;
     }
 
@@ -194,4 +186,27 @@ fn hash_map() {
     println!("'{}' removed.", obsolete);
     reviews.remove(obsolete);
     println!("Review for '{}': '{:?}'", obsolete, reviews.get(obsolete))
+}
+
+fn loop_fn() {
+    let mut conter = 1;
+    let stop_loop = loop {
+        conter *= 2;
+        if conter > 100 {
+            break conter;
+        }
+    };
+    println!("Break the loop = {}.", stop_loop);
+    conter = 0;
+    while conter < 5 {
+        println!("loop count: {}", conter);
+        conter += 1;
+    }
+    let birds = ["ostrich", "peacock", "stork"];
+    for bird in birds.iter() {
+        println!("{} is Bird.", bird);
+    }
+    for number in 0..5 {
+        println!("{}", number)
+    }
 }
