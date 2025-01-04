@@ -17,6 +17,7 @@ enum WebEvent {
     WEClick(MouseClick),
     WEKeys(KeyPress),
 }
+#[derive(PartialEq, Debug)]
 struct Car {
     color: String,
     motor: Transmission,
@@ -87,61 +88,59 @@ fn main() {
     goodbye("Goodbye");
     vec();
 
-    let colors = ["Blue", "Green", "Red", "Silver"];
+    use std::collections::HashMap;
+    let mut orders: HashMap<i32, Car> = HashMap::new();
+    let mut order = 1;
     let mut car: Car;
-    let mut engine = Transmission::Manual;
+    car = car_factory(order, 1000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 
-    car = car_factory(String::from(colors[0]), engine, true, 0);
-    // println!(
-    //     "Car order 1: {:?}, Hard top = {}, {:?}, {}, {} miles",
-    //     car.age.0, car.roof, car.motor, car.color, car.age.1
-    // );
-    engine = Transmission::SemiAuto;
-    car = car_factory(String::from(colors[1]), engine, false, 100);
-    // println!(
-    //     "Car order 2: {:?}, Hard top = {}, {:?}, {}, {} miles",
-    //     car.age.0, car.roof, car.motor, car.color, car.age.1
-    // );
-    engine = Transmission::Automatic;
-    car = car_factory(String::from(colors[2]), engine, true, 200);
-    // println!(
-    //     "Car order 3: {:?}, Hard top = {}, {:?}, {}, {} miles",
-    //     car.age.0, car.roof, car.motor, car.color, car.age.1
-    // );
+    order = order + 1;
+    car = car_factory(order, 2000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+    order = order + 1;
+    car = car_factory(order, 0);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+    order = order + 1;
+    car = car_factory(order, 0);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+    order = order + 1;
+    car = car_factory(order, 3000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+    order = order + 1;
+    car = car_factory(order, 4000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+
+    hash_map();
 }
 
 fn goodbye(text: &str) {
     println!("text: {}", text)
 }
 
-fn car_factory(color: String, motor: Transmission, roof: bool, miles: u32) -> Car {
-    if car_quality(miles).0 == Age::Used {
-        if roof {
-            println!(
-                "Preparing a used car: {:?}, {}, Hard top, {} miles",
-                motor, color, miles
-            );
-        } else {
-            println!(
-                "Preparing a used car: {:?}, {}, Convertible, {} miles",
-                motor, color, miles
-            );
-        }
-    } else {
-        if roof {
-            println!(
-                "Building a new car: {:?}, {}, Hard top, {} miles",
-                motor, color, miles
-            );
-        } else {
-            println!(
-                "Building a new car: {:?}, {}, Convertible, {} miles",
-                motor, color, miles
-            );
-        }
+fn car_factory(order: i32, miles: u32) -> Car {
+    let colors = ["Blue", "Green", "Red", "Silver"];
+    let mut color = order as usize;
+    if color > 4 {
+        color = color - 4;
+    }
+
+    let mut motor = Transmission::Manual;
+    let mut roof = true;
+    if order % 3 == 0 {
+        motor = Transmission::Automatic;
+    } else if order % 2 == 0 {
+        motor = Transmission::SemiAuto;
+        roof = false;
     }
     Car {
-        color: color,
+        color: String::from(colors[(color - 1) as usize]),
         motor: motor,
         roof: roof,
         age: car_quality(miles),
@@ -170,4 +169,29 @@ fn car_quality(miles: u32) -> (Age, u32) {
         return (Age::Used, miles);
     }
     (Age::New, miles)
+}
+
+fn hash_map() {
+    use std::collections::HashMap;
+    let mut reviews: HashMap<String, String> = HashMap::new();
+
+    reviews.insert(
+        String::from("Ancient Roman History"),
+        String::from("Very accurare."),
+    );
+    reviews.insert(
+        String::from("Cooking with Rhubarb"),
+        String::from("Sweet recipes."),
+    );
+    reviews.insert(
+        String::from("Programming in Rust"),
+        String::from("Great exaples."),
+    );
+    let book: &str = "Programming in Rust";
+    println!("Reaview for '{}': '{:?}'", book, reviews.get(book));
+
+    let obsolete: &str = "Ancient Roman History";
+    println!("'{}' removed.", obsolete);
+    reviews.remove(obsolete);
+    println!("Review for '{}': '{:?}'", obsolete, reviews.get(obsolete))
 }
