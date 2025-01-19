@@ -23,6 +23,9 @@ struct MouseClick {
     y: i64,
 }
 #[derive(Debug)]
+struct Highlight<'document>(&'document str);
+
+#[derive(Debug)]
 enum WebEvent {
     WELoad(bool),
     WEClick(MouseClick),
@@ -153,6 +156,61 @@ fn main() {
     if read_file_contents(PathBuf::from("non-existent-file.txt")).is_err() {
         println!("The program reported an error for the file that doesn't exist.");
     }
+
+    let mut greeting = String::from("hello");
+    change(&mut greeting);
+
+    // ライフタイム
+    let x;
+    {
+        let y = 20;
+        // x = &y;
+        x = y;
+    }
+    println!("{}", x);
+
+    let str1 = String::from("abracadabra!");
+    let str2 = String::from("shazam!");
+    let result = longest_word(&str1, &str2);
+    println!("Longest magic word is {}", result);
+
+    let text = String::from("The quick brown fox jumps over the lazy dog.");
+    let fox = Highlight(&text[4..19]);
+    let dog = Highlight(&text[35..43]);
+    println!("{:?}", fox);
+    println!("{:?}", dog);
+    erase(text);
+
+    let name1 = "Joe";
+    let name2 = "Chris";
+    let name3 = "Anne";
+    let mut names = Vec::new();
+    assert_eq!("Joe", copy_and_return(&mut names, &name1));
+    assert_eq!("Chris", copy_and_return(&mut names, &name2));
+    assert_eq!("Anne", copy_and_return(&mut names, &name3));
+    assert_eq!(
+        names,
+        vec!["Joe".to_string(), "Chris".to_string(), "Anne".to_string()]
+    )
+}
+
+fn copy_and_return<'a>(vector: &'a mut Vec<String>, value: &'a str) -> &'a String {
+    vector.push(String::from(value));
+    vector.get(vector.len() - 1).unwrap()
+}
+
+fn erase(_: String) { }
+
+fn longest_word<'a>(x: &'a String, y: &'a String) -> &'a String {
+    if x.len() > y.len() {
+        return x;
+    } else {
+        return y;
+    }
+}
+
+fn change(text: &mut String) {
+    text.push_str(", world");
 }
 
 fn goodbye(text: &str) {
